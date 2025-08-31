@@ -1,0 +1,226 @@
+# Docker Compose for Local Development
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14-alpine
+    container_name: aivida-postgres
+    environment:
+      POSTGRES_DB: aivida_main
+      POSTGRES_USER: aivida_app
+      POSTGRES_PASSWORD: development_password
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/setup/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aivida_app -d aivida_main"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aivida-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: aivida-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+      - ./configs/redis/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aivida-network
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: aivida-api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://aivida_app:development_password@postgres:5432/aivida_main
+      - REDIS_URL=redis://redis:6379/0
+      - ENVIRONMENT=development
+      - DEBUG=true
+    volumes:
+      - ./src/backend/api-gateway:/app/src
+      - ./configs:/app/configs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - aivida-network
+
+  # Auth Service
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: aivida-auth-service
+    ports:
+      - "8001:8000"
+    environment:
+      - DATABASE_URL=postgresql://aivida_app:development_password@postgres:5432/aivida_main
+      - REDIS_URL=redis://redis:6379/1
+      - ENVIRONMENT=development
+      - JWT_SECRET_KEY=development-jwt-secret-key-32-chars
+    volumes:
+      - ./src/backend/auth-service:/app/src
+      - ./configs:/app/configs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aivida-network
+
+  # Ingestion Service
+  ingestion-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: aivida-ingestion-service
+    ports:
+      - "8002:8000"
+    environment:
+      - DATABASE_URL=postgresql://aivida_app:development_password@postgres:5432/aivida_main
+      - REDIS_URL=redis://redis:6379/2
+      - ENVIRONMENT=development
+    volumes:
+      - ./src/backend/ingestion-service:/app/src
+      - ./configs:/app/configs
+      - ./uploads:/app/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aivida-network
+
+  # Generation Service
+  generation-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: aivida-generation-service
+    ports:
+      - "8003:8000"
+    environment:
+      - DATABASE_URL=postgresql://aivida_app:development_password@postgres:5432/aivida_main
+      - REDIS_URL=redis://redis:6379/3
+      - ENVIRONMENT=development
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./src/backend/generation-service:/app/src
+      - ./configs:/app/configs
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - aivida-network
+
+  # Patient Portal (Frontend)
+  patient-portal:
+    build:
+      context: ./src/frontend/patient-portal
+      dockerfile: Dockerfile.dev
+    container_name: aivida-patient-portal
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_ENVIRONMENT=development
+    volumes:
+      - ./src/frontend/patient-portal/src:/app/src
+      - ./src/frontend/patient-portal/public:/app/public
+    networks:
+      - aivida-network
+
+  # Clinician Portal (Frontend)
+  clinician-portal:
+    build:
+      context: ./src/frontend/clinician-portal
+      dockerfile: Dockerfile.dev
+    container_name: aivida-clinician-portal
+    ports:
+      - "3001:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000
+      - REACT_APP_ENVIRONMENT=development
+    volumes:
+      - ./src/frontend/clinician-portal/src:/app/src
+      - ./src/frontend/clinician-portal/public:/app/public
+    networks:
+      - aivida-network
+
+  # Prometheus Monitoring
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aivida-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./configs/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=200h'
+      - '--web.enable-lifecycle'
+    networks:
+      - aivida-network
+
+  # Grafana Dashboard
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aivida-grafana
+    ports:
+      - "3002:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin123
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./configs/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./configs/monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - aivida-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  aivida-network:
+    driver: bridge

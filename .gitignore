@@ -297,8 +297,8 @@ Thumbs.db
 
 # Docker
 .dockerignore
-Dockerfile
-docker-compose*.yml
+# Dockerfile - Keep this file
+# docker-compose*.yml - Keep these files
 
 # Terraform
 *.tfstate
