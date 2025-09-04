@@ -1,0 +1,7 @@
+MSH|^~\&|HIS|HOSPITAL|AI-VIDA|INGESTION|20250903140000||ADT^A03^ADT_A03|MSG001|P|2.5
+EVN|A03|20250903140000|||USER001
+PID|1||12345678^^^MRN||SMITH^JOHN^M||19750115|M|||123 MAIN ST^^CITY^ST^12345||(555)123-4567|||||||||||||||||||||
+PV1|1|I|CCU^101^1|||123456^ANDERSON^SARAH^MD|||||||||||||||||||||||||||||||20250828080000|20250902143000
+DG1|1|I9|I21.19^ST elevation myocardial infarction involving other coronary artery|ST elevation myocardial infarction involving other coronary artery|A
+DG1|2|I9|I10^Essential hypertension|Essential hypertension|S
+DG1|3|I9|E11.9^Type 2 diabetes mellitus without complications|Type 2 diabetes mellitus without complications|S

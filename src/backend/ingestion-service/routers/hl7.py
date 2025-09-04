@@ -76,12 +76,12 @@ async def process_hl7_message(
         # Log audit event
         audit_logger.log_data_processing(
             user_id=token[:10] + "...",
-            document_id=result["message_id"],
+            document_id=result.message_id,
             operation="hl7_processing",
-            status=result["status"],
+            status=result.status,
             metadata={
                 "message_type": message.message_type,
-                "processed_segments": result["processed_segments"]
+                "processed_segments": result.processed_segments
             }
         )
         

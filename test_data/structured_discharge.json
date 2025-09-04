@@ -1,0 +1,85 @@
+{
+  "patient_info": {
+    "name": "Jane Doe",
+    "dob": "1980-05-22",
+    "mrn": "87654321",
+    "admission_id": "ADM-2025-001234"
+  },
+  "admission_details": {
+    "admission_date": "2025-08-30T08:00:00Z",
+    "discharge_date": "2025-09-03T14:30:00Z",
+    "admitting_physician": "Dr. Michael Brown",
+    "attending_physician": "Dr. Lisa Chen"
+  },
+  "chief_complaint": "Abdominal pain and nausea",
+  "history_present_illness": "Ms. Doe is a 45-year-old female who presented with acute onset right upper quadrant abdominal pain associated with nausea and vomiting. Pain started 6 hours prior to admission and progressively worsened.",
+  "past_medical_history": [
+    "Gallstones",
+    "Obesity",
+    "GERD"
+  ],
+  "medications": [
+    {
+      "name": "Omeprazole",
+      "dosage": "20mg",
+      "frequency": "once daily",
+      "route": "oral",
+      "instructions": "Take before breakfast"
+    },
+    {
+      "name": "Simethicone",
+      "dosage": "40mg",
+      "frequency": "as needed",
+      "route": "oral",
+      "instructions": "For gas and bloating"
+    }
+  ],
+  "procedures": [
+    {
+      "name": "Laparoscopic Cholecystectomy",
+      "date": "2025-09-01T10:30:00Z",
+      "surgeon": "Dr. Robert Kim"
+    }
+  ],
+  "discharge_medications": [
+    {
+      "name": "Acetaminophen",
+      "dosage": "650mg",
+      "frequency": "every 6 hours as needed",
+      "route": "oral",
+      "instructions": "For pain management"
+    },
+    {
+      "name": "Omeprazole",
+      "dosage": "20mg",
+      "frequency": "once daily",
+      "route": "oral",
+      "instructions": "Continue previous regimen"
+    }
+  ],
+  "follow_up": [
+    {
+      "provider": "Dr. Robert Kim",
+      "specialty": "Surgery",
+      "date": "2025-09-10T14:00:00Z",
+      "location": "Surgical Clinic, Room 203"
+    },
+    {
+      "provider": "Dr. Michael Brown",
+      "specialty": "Primary Care",
+      "date": "2025-09-17T09:30:00Z",
+      "location": "Family Medicine Clinic"
+    }
+  ],
+  "discharge_instructions": [
+    "Keep incision sites clean and dry",
+    "No heavy lifting for 2 weeks",
+    "Return to normal diet gradually",
+    "Call if fever, severe pain, or signs of infection"
+  ],
+  "discharge_diagnosis": [
+    "Cholelithiasis with acute cholecystitis, status post laparoscopic cholecystectomy",
+    "Obesity",
+    "GERD"
+  ]
+}

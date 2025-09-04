@@ -5,6 +5,7 @@ File upload router for discharge summaries and clinical documents
 import os
 import hashlib
 import asyncio
+import json
 from typing import List, Optional
 from fastapi import APIRouter, UploadFile, File, HTTPException, Depends, Form, BackgroundTasks
 from fastapi.security import HTTPBearer
@@ -128,7 +129,7 @@ async def upload_discharge_document(
                 discharge_data.original_content,
                 discharge_data.source_system,
                 file_hash,
-                discharge_data.metadata,
+                json.dumps(discharge_data.metadata),  # Convert dict to JSON string
                 DocumentStatus.PENDING.value
             )
             
@@ -180,6 +181,24 @@ async def upload_discharge_document(
             processed_at=discharge_summary.processed_at,
             processed_content=None  # Will be populated after processing
         )
+        
+    except HTTPException as http_exc:
+        # Re-raise HTTPExceptions (like 409 for duplicates) as-is
+        logger.error(f"HTTP error uploading document: {http_exc.detail}")
+        
+        # Log audit event for HTTP errors
+        audit_logger.log_data_processing(
+            user_id=token[:10] + "...",
+            document_id="unknown",
+            operation="upload",
+            status="error",
+            metadata={
+                "error": f"{http_exc.status_code}: {http_exc.detail}",
+                "filename": file.filename if file.filename else "unknown"
+            }
+        )
+        
+        raise http_exc
         
     except Exception as e:
         logger.error(f"Error uploading document: {e}")

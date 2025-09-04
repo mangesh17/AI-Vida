@@ -1,0 +1,62 @@
+DISCHARGE SUMMARY
+
+Patient Name: John Smith
+DOB: 01/15/1975
+MRN: 12345678
+Admission Date: 08/28/2025
+Discharge Date: 09/02/2025
+
+CHIEF COMPLAINT:
+Chest pain and shortness of breath
+
+HISTORY OF PRESENT ILLNESS:
+Mr. Smith is a 50-year-old male with a history of hypertension who presented to the emergency department with acute onset chest pain and shortness of breath. The pain started approximately 2 hours prior to arrival and was described as crushing, substernal, radiating to the left arm.
+
+PAST MEDICAL HISTORY:
+1. Hypertension
+2. Type 2 Diabetes Mellitus
+3. Hyperlipidemia
+
+MEDICATIONS ON ADMISSION:
+1. Lisinopril 10mg PO daily
+2. Metformin 500mg PO twice daily
+3. Atorvastatin 20mg PO daily
+
+PHYSICAL EXAMINATION:
+Vitals: BP 150/90, HR 98, RR 22, O2 Sat 94% on room air
+General: Alert, oriented, in mild distress
+CV: Regular rate and rhythm, no murmurs
+Lungs: Decreased breath sounds at bases bilaterally
+Abdomen: Soft, non-tender
+
+HOSPITAL COURSE:
+Patient was admitted to the cardiac care unit. EKG showed ST elevation in leads II, III, and aVF consistent with inferior STEMI. Patient underwent emergent cardiac catheterization which revealed 100% occlusion of the RCA. Successful PCI with drug-eluting stent placement was performed.
+
+DISCHARGE MEDICATIONS:
+1. Aspirin 81mg PO daily
+2. Clopidogrel 75mg PO daily
+3. Atorvastatin 80mg PO daily
+4. Metoprolol 25mg PO twice daily
+5. Lisinopril 10mg PO daily
+6. Metformin 500mg PO twice daily
+
+FOLLOW-UP APPOINTMENTS:
+1. Cardiology - Dr. Johnson - 09/10/2025 at 2:00 PM
+2. Primary Care - Dr. Williams - 09/15/2025 at 10:00 AM
+3. Cardiac Rehabilitation - 09/12/2025 at 9:00 AM
+
+DISCHARGE INSTRUCTIONS:
+1. Take all medications as prescribed
+2. Follow up with cardiology as scheduled
+3. Begin cardiac rehabilitation program
+4. Return to ED if chest pain, shortness of breath, or other concerning symptoms
+5. No heavy lifting for 2 weeks
+6. Diet: Low sodium, low fat
+
+DISCHARGE DIAGNOSIS:
+1. ST-elevation myocardial infarction (STEMI), inferior
+2. Hypertension
+3. Type 2 Diabetes Mellitus
+4. Hyperlipidemia
+
+Attending Physician: Dr. Sarah Anderson, MD
